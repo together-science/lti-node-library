@@ -1,7 +1,6 @@
 require('dotenv').config();
 const url = require('url');    
-const Database = require('../Provider/mongoDB/Database.js');
-const { platformSchema } = require('../Provider/register_platform');
+const Database = require('../Provider/Database.js');
 
 /*
 * Validates OIDC login request.  Checkes required parameters are present.
@@ -36,7 +35,7 @@ function create_oidc_response(req, res) {
   //Save the OIDC Login Request to reference later during current session
   req.session.login_request = req.body;
 
-  Database.Get('platforms', platformSchema, { consumerUrl: req.session.login_request.iss })
+  Database.Get({ consumerUrl: req.session.login_request.iss })
   .then(dbResult => {
 
     if (dbResult.length === 1) return dbResult[0]
